@@ -1,0 +1,60 @@
+body {
+    height: 160vh;
+}
+
+.shortcut {
+    background-color: #478ae2;
+    border-radius: 12px;
+    color: #ffffff;
+    font-weight: 600;
+    text-align: center;
+    margin-right: 10px;
+    cursor: pointer;
+    padding: 50px;
+    margin-bottom: 10px;
+}
+
+.shortcut:hover {
+    background-color: #3b73bb;
+}
+
+.controls {
+    margin-bottom: 1.5rem;
+}
+
+.modal-card {
+    margin-top: 50px;
+}
+
+.label {
+    display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #000000;
+        color: #ffffff;
+    }
+
+    .title, .subtitle, .label, .modal-card-title {
+        color: #ffffff;
+    }
+
+    .box {
+        background-color: #4d4d4d;
+    }
+
+    .input {
+        background-color: #363636;
+        border-color: #000000;
+        color: #ffffff !important;
+    }
+
+    .modal-card-head, .modal-card-foot {
+        background-color: #363636;
+    }
+
+    .modal-card-body {
+        background-color: #4d4d4d;
+    }
+}

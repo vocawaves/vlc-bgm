@@ -1,0 +1,13 @@
+{
+    "dependencies": {
+        "ejs": "^3.1.6",
+        "express": "^4.17.2",
+        "express-session": "^1.17.2",
+        "ini": "^2.0.0",
+        "node-vlc-http": "^1.2.0",
+        "socket.io": "^4.4.0"
+    },
+    "scripts": {
+        "start": "cd src && node index.js"
+    }
+}
