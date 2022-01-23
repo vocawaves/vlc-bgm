@@ -1,3 +1,4 @@
+// imports
 const express = require('express');
 const app = express();
 const session = require('express-session');
@@ -8,6 +9,7 @@ const io = require('socket.io')(server);
 const ini = require('ini');
 const fs = require('fs');
 
+// config
 const config = ini.parse(fs.readFileSync('../config.ini', 'utf8'));
 
 const vlc = new VLC({
@@ -35,7 +37,18 @@ app.use(express.urlencoded({
 app.disable('x-powered-by');
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+app.use('/assets/css/bulma.min.css', express.static('../node_modules/bulma/css/bulma.min.css'));
+app.use('/assets/js/socket.io.min.js', express.static('../node_modules/socket.io-client/dist/socket.io.min.js'));
 
+const refresh = async () => {
+    const data = await vlc.updateAll();
+    return {
+        status: helpers.capitaliseStart(data[0].state),
+        volume: data[0].volume
+    };
+}
+
+// routes
 app.get('/login', (_req, res) => { 
     if (config.server.login_password === 'NULL') {
         return res.redirect('/');
@@ -65,35 +78,32 @@ app.get('/', async (req, res) => {
         return res.redirect('/login');
     }
 
-    const data = await vlc.updateAll();
-    res.render('index', {
-        status: helpers.capitaliseStart(data[0].state),
-        volume: data[0].volume
-    });
+    res.render('index', await refresh());
 });
 
 server.listen(config.server.port);
 
+// socket
 io.on('connection', (socket) => {
     // controls
     socket.on('pause', async () => { 
         vlc.pause();
-        io.emit('refresh');
+        io.emit('refresh', await refresh());
     });
 
     socket.on('play', async () => { 
         vlc.pause();
-        io.emit('refresh');
+        io.emit('refresh', await refresh());
     });
 
     socket.on('stop', async () => { 
         vlc.stop();
-        io.emit('refresh');
+        io.emit('refresh', await refresh());
     });
 
     socket.on('skip', async () => { 
         vlc.playlistNext();
-        io.emit('refresh');
+        io.emit('refresh', await refresh());
     });
 
     // shortcuts
@@ -106,7 +116,7 @@ io.on('connection', (socket) => {
             await helpers.sleep(config.server.fadeout_wait);
         }
         vlc.stop();
-        io.emit('refresh');
+        io.emit('refresh', await refresh());
     });
 
     socket.on('fadein', async () => {
@@ -118,7 +128,7 @@ io.on('connection', (socket) => {
             data[0].volume = newVolume;
             await helpers.sleep(config.server.fadein_wait);
         }
-        io.emit('refresh');
+        io.emit('refresh', await refresh());
     });
 
     socket.on('changevolume', async (type, amount, speed) => {
@@ -134,10 +144,11 @@ io.on('connection', (socket) => {
             data[0].volume = newVolume;
             await helpers.sleep(speed);
         }
-        io.emit('refresh');
+        io.emit('refresh', await refresh());
     });
 });
 
+// catch err
 process.on('unhandledRejection', (e) => {
     console.log(e);
 });

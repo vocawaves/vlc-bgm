@@ -3,7 +3,7 @@
 
 <head>
     <title>vlc-bgm interface</title>
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.1/css/bulma.min.css'>
+    <link rel='stylesheet' href='assets/css/bulma.min.css'>
     <link rel='stylesheet' href='assets/css/index.css'>
 </head>
 
@@ -53,32 +53,34 @@
                 <div class="modal">
                     <div class="modal-background"></div>
                     <div class="modal-card">
-                      <header class="modal-card-head">
-                        <p class="modal-card-title" id='volume-title'>Increase volume</p>
-                        <button class="delete" aria-label="close" onclick="hidemodal()"></button>
-                      </header>
-                      <section class="modal-card-body">
-                        <label for="amount">Amount</label>
-                        <br/>
-                        <span>1</span>
-                        <input type="range" min="0" max="500" value="50" step="10" name="amount" id="amount">
-                        <span id="amountcurrent">0 (50)</span>
-                        <br/>
-                        <label for="speed">Speed (ms)</label>
-                        <br/>
-                        <span>0</span>
-                        <input type="range" min="0" max="1000" value="50" step="10" name="speed" id="speed">
-                        <span id="speedcurrent">0 (50)</span>
-                      </section>
-                      <footer class="modal-card-foot">
-                        <button class="button is-success" onclick="socket.emit('changevolume', window.type, document.getElementById('amount').value, document.getElementById('speed').value)">Submit</button>
-                      </footer>
+                        <header class="modal-card-head">
+                            <p class="modal-card-title" id='volume-title'>Increase volume</p>
+                            <button class="delete" aria-label="close" onclick="hidemodal()"></button>
+                        </header>
+                        <section class="modal-card-body">
+                            <label for="amount">Amount</label>
+                            <br />
+                            <span>1</span>
+                            <input type="range" min="0" max="500" value="50" step="10" name="amount" id="amount">
+                            <span id="amountcurrent">0 (50)</span>
+                            <br />
+                            <label for="speed">Speed (ms)</label>
+                            <br />
+                            <span>0</span>
+                            <input type="range" min="0" max="1000" value="50" step="10" name="speed" id="speed">
+                            <span id="speedcurrent">0 (50)</span>
+                        </section>
+                        <footer class="modal-card-foot">
+                            <button class="button is-success" id='submitbtn'
+                                onclick="submitmodal()">Submit</button>
+                            <span id='updating'></span>
+                        </footer>
                     </div>
-                  </div>
+                </div>
             </div>
         </div>
     </div>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.min.js'></script>
+    <script src='assets/js/socket.io.min.js'></script>
     <script src='assets/js/index.js'></script>
 </body>
 

@@ -1,10 +1,8 @@
 const socket = io.connect('http://localhost');
 
-socket.on('refresh', () => {
-    window.location.reload();
-});
+const updating = document.getElementById('updating');
+const submitbtn = document.getElementById('submitbtn');
 
-// increase/decrease vol
 const showmodal = (type) => {
     document.getElementById('volume-title').innerText = type + ' Volume';
     window.type = type.toLowerCase();
@@ -13,7 +11,14 @@ const showmodal = (type) => {
 
 const hidemodal = () => {
     document.getElementsByClassName('modal')[0].style.display = 'none';
+    updating.innerText = '';
+    submitbtn.disabled = false;
 };
+
+socket.on('refresh', (data) => {
+    document.getElementsByClassName('subtitle')[0].innerText = `Current status: ${data.status} @ volume ${data.volume}`;
+    hidemodal();
+});
 
 document.getElementsByClassName('modal-background')[0].onclick = () => { 
     hidemodal();
@@ -27,4 +32,10 @@ amount.oninput = () => {
 const speed = document.getElementById('speed');
 speed.oninput = () => { 
     document.getElementById('speedcurrent').innerText = `0 (${speed.value})`;
+};
+
+const submitmodal = () => {
+    socket.emit('changevolume', window.type, amount.value, speed.value);
+    updating.innerText = 'Updating...';
+    submitbtn.disabled = true;
 };
