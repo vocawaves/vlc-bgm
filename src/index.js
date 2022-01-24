@@ -10,7 +10,17 @@ const ini = require('ini');
 const fs = require('fs');
 
 // config
-const config = ini.parse(fs.readFileSync('../config.ini', 'utf8'));
+let config;
+try {
+    config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'));
+} catch (e) {
+    try {
+        config = ini.parse(fs.readFileSync('../config.ini', 'utf8'));
+    } catch (e) {
+        console.log('No config file found. Please create a "config.ini" file from "config.example.ini". If this is not available, please look on the GitHub.');
+        process.exit(1);
+    }
+}
 
 const vlc = new VLC({
     host: config.vlc.host,
@@ -81,7 +91,9 @@ app.get('/', async (req, res) => {
     res.render('index', await refresh());
 });
 
-server.listen(config.server.port);
+server.listen(config.server.port).then(() => {
+    console.log(`Server started on port ${config.server.port}`);
+});
 
 // socket
 io.on('connection', (socket) => {
