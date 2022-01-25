@@ -26,17 +26,13 @@
     display: block;
 }
 
-.modal-card-body {
-    color: #ffffff;
-}
-
 @media (prefers-color-scheme: dark) {
     html {
         background-color: #000000;
         color: #ffffff;
     }
 
-    .title, .subtitle, .label, .modal-card-title {
+    .title, .subtitle, .label, .modal-card-title, .modal-card-body {
         color: #ffffff;
     }
 
