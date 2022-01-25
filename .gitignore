@@ -1,8 +1,10 @@
 # Directories
 dist/
+.vscode/
 node_modules/
 
 # Files
+LICENSES
 yarn.lock
 config.ini
 package-lock.json

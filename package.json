@@ -11,6 +11,9 @@
         "socket.io": "^4.4.1",
         "socket.io-client": "^4.4.1"
     },
+    "devDependencies": {
+        "pkg": "^1.0.0"
+    },
     "bin": "src/index.js",
     "scripts": {
         "start": "cd src && node index.js",

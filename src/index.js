@@ -9,6 +9,12 @@ const io = require('socket.io')(server);
 const ini = require('ini');
 const fs = require('fs');
 
+if (!fs.existsSync('./LICENSES')) {
+    helpers.getLicenses();
+}
+
+const licenses = fs.readFileSync('./LICENSES', 'utf8');
+
 // config
 let config;
 try {
@@ -91,8 +97,14 @@ app.get('/', async (req, res) => {
     res.render('index', await refresh());
 });
 
-server.listen(config.server.port).then(() => {
-    console.log(`Server started on port ${config.server.port}`);
+app.get('/licenses', (_req, res) => {
+    res.render('licenses', {
+        licenses
+    });
+});
+
+server.listen(config.server.port, () => {
+    console.log(`Server started on port ${config.server.port}. License information can be found at http://localhost:${config.server.port}/licenses`);
 });
 
 // socket
