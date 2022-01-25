@@ -26,6 +26,10 @@
     display: block;
 }
 
+.modal-card-body {
+    color: #ffffff;
+}
+
 @media (prefers-color-scheme: dark) {
     html {
         background-color: #000000;
