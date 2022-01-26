@@ -70,7 +70,9 @@ app.get('/login', (_req, res) => {
         return res.redirect('/');
     }
 
-    res.render('login');
+    res.render('login', {
+        error: ''
+    });
 });
 
 app.post('/login', (req, res) => {
@@ -81,6 +83,10 @@ app.post('/login', (req, res) => {
     if (req.body.password === config.server.login_password) {
         req.session.loggedIn = true;
         res.redirect('/');
+    } else {
+        res.render('login', {
+            error: 'Incorrect password.'
+        });
     }
 });
 
@@ -94,12 +100,30 @@ app.get('/', async (req, res) => {
         return res.redirect('/login');
     }
 
-    res.render('index', await refresh());
+    try {
+      res.render('index', await refresh());
+    } catch (e) { 
+      res.render('error', {
+        code: 500,
+        message: 'Failed to connect to VLC'
+      });
+    }
 });
 
 app.get('/licenses', (_req, res) => {
     res.render('licenses', {
         licenses
+    });
+});
+
+app.get('*', (req, res) => {
+    if (!req.session.loggedIn && config.server.login_password !== 'NULL') {
+        return res.redirect('/login');
+    }
+
+    res.render('error', {
+        code: 404,
+        message: 'Page not found'
     });
 });
 

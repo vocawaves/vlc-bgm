@@ -9,13 +9,14 @@
 
 <body>
     <div class="columns">
-        <div class="column is-three-fifths is-offset-one-fifth has-text-centered">
+        <div class="column is-quarter has-text-centered center">
             <form action="/login" method="post" class="box">
                 <div class="field">
                     <label for="password" class="label">Password</label>
                     <div class="control">
                         <input type="password" class="input" name="password" required>
                     </div>
+                    <span class='login-error'><%= error %></span>
                 </div>
                 <div class="field">
                     <button class="button is-success">
