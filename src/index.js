@@ -60,7 +60,7 @@ const refresh = async () => {
     const data = await vlc.updateAll();
     return {
         status: helpers.capitaliseStart(data[0].state),
-        volume: data[0].volume
+        volume: Math.round(data[0].volume / 2.56)
     };
 }
 
@@ -133,6 +133,14 @@ server.listen(config.server.port, () => {
 
 // socket
 io.on('connection', (socket) => {
+    const refreshInterval = setInterval(async () => {
+        io.emit('refreshstats', await refresh());
+    }, 500);
+
+    socket.on('disconnect', () => { 
+        clearInterval(refreshInterval);
+    });
+
     // controls
     socket.on('pause', async () => { 
         vlc.pause();

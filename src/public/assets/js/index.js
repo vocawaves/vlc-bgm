@@ -16,8 +16,12 @@ const hidemodal = () => {
 };
 
 socket.on('refresh', (data) => {
-    document.getElementsByClassName('subtitle')[0].innerText = `Current status: ${data.status} @ volume ${data.volume}`;
+    document.getElementsByClassName('subtitle')[0].innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
     hidemodal();
+});
+
+socket.on('refreshstats', (data) => {
+    document.getElementsByClassName('subtitle')[0].innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
 });
 
 document.getElementsByClassName('modal-background')[0].onclick = () => { 
