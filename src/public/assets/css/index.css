@@ -84,3 +84,11 @@
 .login-error {
     color: red;
 }
+
+.volumecontrol {
+    color: #ffffff;
+}
+
+#volumeslider {
+    width: 25%;
+}

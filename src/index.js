@@ -63,7 +63,6 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use('/assets/css/bulma.min.css', express.static('../node_modules/bulma/css/bulma.min.css'));
 app.use('/assets/js/socket.io.min.js', express.static('../node_modules/socket.io-client/dist/socket.io.min.js'));
-app.use(require('./modules/router.js')(config, refresh, licenses));
 
 const refresh = async () => {
     const data = await vlc.updateAll();
@@ -73,6 +72,7 @@ const refresh = async () => {
     };
 }
 
+app.use(require('./modules/router.js')(config, refresh, licenses));
 server.listen(config.server.port, () => {
     console.log(`Server started on port ${config.server.port}. License information can be found at http://localhost:${config.server.port}/licenses`);
 });

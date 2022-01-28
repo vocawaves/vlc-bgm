@@ -2,26 +2,28 @@ const socket = io.connect('http://localhost');
 
 const updating = document.getElementById('updating');
 const submitbtn = document.getElementById('submitbtn');
+const modal = document.getElementsByClassName('modal')[0];
+const subtitle = document.getElementsByClassName('subtitle')[0];
 
 const showmodal = (type) => {
     document.getElementById('volume-title').innerText = type + ' Volume';
     window.type = type.toLowerCase();
-    document.getElementsByClassName('modal')[0].style.display = 'block';
+    modal.style.display = 'block';
 };
 
 const hidemodal = () => {
-    document.getElementsByClassName('modal')[0].style.display = 'none';
+    modal.style.display = 'none';
     updating.innerText = '';
     submitbtn.disabled = false;
 };
 
 socket.on('refresh', (data) => {
-    document.getElementsByClassName('subtitle')[0].innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
+    subtitle.innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
     hidemodal();
 });
 
 socket.on('refreshstats', (data) => {
-    document.getElementsByClassName('subtitle')[0].innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
+    subtitle.innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
 });
 
 document.getElementsByClassName('modal-background')[0].onclick = () => { 
@@ -43,3 +45,8 @@ const submitmodal = () => {
     updating.innerText = 'Updating...';
     submitbtn.disabled = true;
 };
+
+
+document.getElementById('volumeslider').onchange = (e) => { 
+    socket.emit('changevolumeexact', e.target.value);
+}

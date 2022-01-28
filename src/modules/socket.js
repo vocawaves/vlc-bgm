@@ -69,5 +69,10 @@ module.exports = (io, vlc, refresh, config) => {
             }
             io.emit('refresh', await refresh());
         });
+
+        socket.on('changevolumeexact', async (val) => {
+            vlc.setVolume(val * 0.256);
+            io.emit('refresh', await refresh());
+        });
     });
 }
