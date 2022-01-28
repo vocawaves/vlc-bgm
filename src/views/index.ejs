@@ -8,71 +8,71 @@
 </head>
 
 <body>
-    <div class="columns">
-        <div class="column is-three-fifths is-offset-one-fifth has-text-centered">
+    <div class='columns'>
+        <div class='column is-three-fifths is-offset-one-fifth has-text-centered'>
             <h1 class='title'>vlc-bgm interface</h1>
             <h2 class='subtitle'>Current status: <%= status %> @ volume <%= volume %>%</h2>
-            <a class="button is-success" href="/logout">
+            <a class='button is-success' href='/logout'>
                 Logout
             </a>
             <div class='controls'>
                 <h3 class='subtitle'>Controls</h3>
-                <div class="columns">
-                    <div class="column shortcut" onclick="socket.emit('pause')">
+                <div class='columns'>
+                    <div class='column shortcut' onclick='socket.emit("pause")'>
                         Pause
                     </div>
-                    <div class="column shortcut" onclick="socket.emit('play')">
+                    <div class='column shortcut' onclick='socket.emit("play")'>
                         Play
                     </div>
-                    <div class="column shortcut" onclick="socket.emit('stop')">
+                    <div class='column shortcut' onclick='socket.emit("stop")'>
                         Stop
                     </div>
-                    <div class="column shortcut" onclick="socket.emit('skip')">
+                    <div class='column shortcut' onclick='socket.emit("skip")'>
                         Skip
                     </div>
                 </div>
             </div>
             <div class='shortcuts'>
                 <h3 class='subtitle'>Shortcuts</h3>
-                <div class="columns">
-                    <div class="column shortcut" onclick="socket.emit('fadeout')">
+                <div class='columns'>
+                    <div class='column shortcut' onclick='socket.emit("fadeout")'>
                         Fade out
                     </div>
-                    <div class="column shortcut" onclick="showmodal('Increase')">
+                    <div class='column shortcut' onclick='showmodal("Increase")'>
                         Slowly increase volume
                     </div>
-                    <div class="column shortcut" onclick="showmodal('Decrease')">
+                    <div class='column shortcut' onclick='showmodal("Decrease")'>
                         Slowly decrease volume
                     </div>
-                    <div class="column shortcut" onclick="socket.emit('fadein')">
+                    <div class='column shortcut' onclick='socket.emit("fadein")'>
                         Fade in
                     </div>
                 </div>
             </div>
             <div id='volume-modal'>
-                <div class="modal">
-                    <div class="modal-background"></div>
-                    <div class="modal-card">
-                        <header class="modal-card-head">
-                            <p class="modal-card-title" id='volume-title'>Increase volume</p>
-                            <button class="delete" aria-label="close" onclick="hidemodal()"></button>
+                <div class='modal'>
+                    <div class='modal-background'></div>
+                    <div class='modal-card'>
+                        <header class='modal-card-head'>
+                            <p class='modal-card-title' id='volume-title'>Increase volume</p>
+                            <button class='delete' aria-label='close' onclick='hidemodal()'></button>
                         </header>
-                        <section class="modal-card-body">
-                            <label for="amount">Amount</label>
+                        <section class='modal-card-body'>
+                            <label for='amount'>Amount</label>
                             <br />
                             <span>1</span>
-                            <input type="range" min="0" max="500" value="50" step="10" name="amount" id="amount">
-                            <span id="amountcurrent">0 (50)</span>
+                            <input type='range' min='0' max='500' value='50' step='10' name='amount' id='amount'>
+                            <span id='amountcurrent'>0 (50)</span>
                             <br />
-                            <label for="speed">Speed (ms)</label>
+                            <label for='speed'>Speed (ms)</label>
                             <br />
                             <span>0</span>
-                            <input type="range" min="0" max="1000" value="50" step="10" name="speed" id="speed">
-                            <span id="speedcurrent">0 (50)</span>
+                            <input type='range' min='0' max='1000' value='50' step='10' name='speed' id='speed'>
+                            <span id='speedcurrent'>0 (50)</span>
                         </section>
-                        <footer class="modal-card-foot">
-                            <button class="button is-success" id='submitbtn'
-                                onclick="submitmodal()">Submit</button>
+                        <footer class='modal-card-foot'>
+                            <button class='button is-success' id='submitbtn'
+                                onclick='submitmodal()'>Submit</button>
                             <span id='updating'></span>
                         </footer>
                     </div>

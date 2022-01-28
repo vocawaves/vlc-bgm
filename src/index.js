@@ -1,9 +1,9 @@
-// imports
 const express = require('express');
 const app = express();
 const session = require('express-session');
+const ratelimit = require('express-rate-limit');
 const { VLC } = require('node-vlc-http');
-const helpers = require('./helpers.js');
+const helpers = require('./modules/helpers.js');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const ini = require('ini');
@@ -15,7 +15,6 @@ if (!fs.existsSync('./LICENSES')) {
 
 const licenses = fs.readFileSync('./LICENSES', 'utf8');
 
-// config
 let config;
 try {
     config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'));
@@ -26,6 +25,15 @@ try {
         console.log('No config file found. Please create a "config.ini" file from "config.example.ini". If this is not available, please look on the GitHub.');
         process.exit(1);
     }
+}
+
+if (config.express.ratelimit_enabled) {
+    const limiter = ratelimit({
+        windowMs: config.express.ratelimit_window,
+        max: config.express.ratelimit_max
+    });
+
+    app.use(limiter);
 }
 
 const vlc = new VLC({
@@ -55,6 +63,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use('/assets/css/bulma.min.css', express.static('../node_modules/bulma/css/bulma.min.css'));
 app.use('/assets/js/socket.io.min.js', express.static('../node_modules/socket.io-client/dist/socket.io.min.js'));
+app.use(require('./modules/router.js')(config, refresh, licenses));
 
 const refresh = async () => {
     const data = await vlc.updateAll();
@@ -64,147 +73,11 @@ const refresh = async () => {
     };
 }
 
-// routes
-app.get('/login', (_req, res) => { 
-    if (config.server.login_password === 'NULL') {
-        return res.redirect('/');
-    }
-
-    res.render('login', {
-        error: ''
-    });
-});
-
-app.post('/login', (req, res) => {
-    if (config.server.login_password === 'NULL') {
-        return res.redirect('/');
-    }
-
-    if (req.body.password === config.server.login_password) {
-        req.session.loggedIn = true;
-        res.redirect('/');
-    } else {
-        res.render('login', {
-            error: 'Incorrect password.'
-        });
-    }
-});
-
-app.get('/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/login');
-});
-
-app.get('/', async (req, res) => {
-    if (!req.session.loggedIn && config.server.login_password !== 'NULL') {
-        return res.redirect('/login');
-    }
-
-    try {
-      res.render('index', await refresh());
-    } catch (e) { 
-      res.render('error', {
-        code: 500,
-        message: 'Failed to connect to VLC'
-      });
-    }
-});
-
-app.get('/licenses', (_req, res) => {
-    res.render('licenses', {
-        licenses
-    });
-});
-
-app.get('*', (req, res) => {
-    if (!req.session.loggedIn && config.server.login_password !== 'NULL') {
-        return res.redirect('/login');
-    }
-
-    res.render('error', {
-        code: 404,
-        message: 'Page not found'
-    });
-});
-
 server.listen(config.server.port, () => {
     console.log(`Server started on port ${config.server.port}. License information can be found at http://localhost:${config.server.port}/licenses`);
 });
+require('./modules/socket.js')(io, vlc, refresh, config);
 
-// socket
-io.on('connection', (socket) => {
-    const refreshInterval = setInterval(async () => {
-        io.emit('refreshstats', await refresh());
-    }, 500);
-
-    socket.on('disconnect', () => { 
-        clearInterval(refreshInterval);
-    });
-
-    // controls
-    socket.on('pause', async () => { 
-        vlc.pause();
-        io.emit('refresh', await refresh());
-    });
-
-    socket.on('play', async () => { 
-        vlc.pause();
-        io.emit('refresh', await refresh());
-    });
-
-    socket.on('stop', async () => { 
-        vlc.stop();
-        io.emit('refresh', await refresh());
-    });
-
-    socket.on('skip', async () => { 
-        vlc.playlistNext();
-        io.emit('refresh', await refresh());
-    });
-
-    // shortcuts
-    socket.on('fadeout', async () => {
-        const data = await vlc.updateAll();
-        while (data[0].volume > 0) {
-            const newVolume = data[0].volume - 2;
-            vlc.setVolume(newVolume);
-            data[0].volume = newVolume;
-            await helpers.sleep(config.server.fadeout_wait);
-        }
-        vlc.stop();
-        io.emit('refresh', await refresh());
-    });
-
-    socket.on('fadein', async () => {
-        vlc.pause();
-        const data = await vlc.updateAll();
-        while (data[0].volume < Number(config.server.fadein_max)) {
-            const newVolume = data[0].volume + 2;
-            vlc.setVolume(newVolume);
-            data[0].volume = newVolume;
-            await helpers.sleep(config.server.fadein_wait);
-        }
-        io.emit('refresh', await refresh());
-    });
-
-    socket.on('changevolume', async (type, amount, speed) => {
-        const data = await vlc.updateAll();
-        for (let i = 0; i < amount; i++) {
-            let newVolume;
-            if (type === 'decrease') {
-                newVolume = data[0].volume - 2;
-            } else if (type === 'increase') {
-                newVolume = data[0].volume + 2;
-            }
-            vlc.setVolume(newVolume);
-            data[0].volume = newVolume;
-            await helpers.sleep(speed);
-        }
-        io.emit('refresh', await refresh());
-    });
-});
-
-// catch err
 process.on('unhandledRejection', (e) => {
     console.log(e);
 });

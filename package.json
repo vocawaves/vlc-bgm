@@ -5,6 +5,7 @@
         "bulma": "^0.9.3",
         "ejs": "^3.1.6",
         "express": "^4.17.2",
+        "express-rate-limit": "^6.2.0",
         "express-session": "^1.17.2",
         "ini": "^2.0.0",
         "node-vlc-http": "^1.2.0",
@@ -12,7 +13,7 @@
         "socket.io-client": "^4.4.1"
     },
     "devDependencies": {
-        "pkg": "^1.0.0"
+        "pkg": "^5.2.2"
     },
     "bin": "src/index.js",
     "scripts": {
