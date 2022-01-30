@@ -17,6 +17,8 @@ a laptop behind the scenes in an event. The web interface allows you to control 
 4. ``cd`` into the directory in a terminal and run ``npm i`` (or ``yarn``) to install dependencies
 5. Copy ``config.example.ini`` to ``config.ini`` and fill it out
 6. Make sure VLC is running and run ``npm start`` to start the interface
+### Building
+Binaries can be created with ``npm run build-<distro>``, etc ``npm run build-win`` or ``npm run build-linux``. These will appear in a ``dist`` directory.
 
 ## License
 [MIT](LICENSE)

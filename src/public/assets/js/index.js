@@ -3,7 +3,7 @@ const socket = io.connect('http://localhost');
 const updating = document.getElementById('updating');
 const submitbtn = document.getElementById('submitbtn');
 const modal = document.getElementsByClassName('modal')[0];
-const subtitle = document.getElementsByClassName('subtitle')[0];
+const statusElement = document.getElementsByClassName('subtitle')[0];
 
 const showmodal = (type) => {
     document.getElementById('volume-title').innerText = type + ' Volume';
@@ -18,12 +18,12 @@ const hidemodal = () => {
 };
 
 socket.on('refresh', (data) => {
-    subtitle.innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
+    statusElement.innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
     hidemodal();
 });
 
 socket.on('refreshstats', (data) => {
-    subtitle.innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
+    statusElement.innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
 });
 
 document.getElementsByClassName('modal-background')[0].onclick = () => { 
