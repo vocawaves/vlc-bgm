@@ -92,3 +92,8 @@
 #volumeslider {
     width: 25%;
 }
+
+#error {
+    margin-top: 10px;
+    display: none;
+}

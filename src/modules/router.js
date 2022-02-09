@@ -1,7 +1,8 @@
 const router = require('express').Router();
 
-module.exports = (config, refresh, licenses) => {
+module.exports = (config, refresh, licenses, log) => {
     router.get('/login', (_req, res) => { 
+        log.info('Login page requested');
         if (config.server.login_password === 'NULL') {
             return res.redirect('/');
         }
@@ -27,12 +28,15 @@ module.exports = (config, refresh, licenses) => {
     });
     
     router.get('/logout', (req, res) => {
-        req.session.destroy();
+        log.info('Logout page requested');
+        req.session = null;
         res.redirect('/login');
     });
     
     router.get('/', async (req, res) => {
+        log.info('Home page requested');
         if (!req.session.loggedIn && config.server.login_password !== 'NULL') {
+            log.warn('User not logged in');
             return res.redirect('/login');
         }
     
@@ -47,13 +51,16 @@ module.exports = (config, refresh, licenses) => {
     });
     
     router.get('/licenses', (_req, res) => {
+        log.info('License page requested');
         res.render('licenses', {
             licenses
         });
     });
     
     router.get('*', (req, res) => {
+        log.info('404 page requested');
         if (!req.session.loggedIn && config.server.login_password !== 'NULL') {
+            log.warn('User not logged in');
             return res.redirect('/login');
         }
     

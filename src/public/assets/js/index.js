@@ -50,3 +50,11 @@ const submitmodal = () => {
 document.getElementById('volumeslider').onchange = (e) => { 
     socket.emit('changevolumeexact', e.target.value);
 }
+
+socket.on('connect', () => {
+    document.getElementById('error').style.display = 'none';
+});
+
+socket.on('connect_error', (err) => {
+    document.getElementById('error').style.display = 'block';
+});

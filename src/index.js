@@ -1,6 +1,15 @@
+const Logger = require('leekslazylogger');
+const log = new Logger({
+    transports: [
+        new Logger.transports.ConsoleTransport()
+    ]
+});
+
+log.info('Starting vlc-bgm server...');
+
 const express = require('express');
 const app = express();
-const session = require('express-session');
+const session = require('cookie-session');
 const ratelimit = require('express-rate-limit');
 const { VLC } = require('node-vlc-http');
 const helpers = require('./modules/helpers.js');
@@ -8,6 +17,7 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const ini = require('ini');
 const fs = require('fs');
+const os = require('os');
 
 if (!fs.existsSync('./LICENSES')) {
     helpers.getLicenses();
@@ -22,7 +32,7 @@ try {
     try {
         config = ini.parse(fs.readFileSync('../config.ini', 'utf8'));
     } catch (e) {
-        console.log('No config file found. Please create a "config.ini" file from "config.example.ini". If this is not available, please look on the GitHub.');
+        log.error('No config file found. Please create a "config.ini" file from "config.example.ini". If this is not available, please look on the GitHub.');
         process.exit(1);
     }
 }
@@ -46,12 +56,7 @@ const vlc = new VLC({
 app.use(session({
     secret: config.express.session_secret,
     name: config.express.session_name,
-    cookie: {
-      httpOnly: true,
-      maxAge: Number(config.express.session_cookie_time)
-    },
-    resave: false,
-    saveUninitialized: false
+    maxAge: Number(config.express.session_cookie_time)
 }));
 
 app.use(express.urlencoded({
@@ -72,12 +77,26 @@ const refresh = async () => {
     };
 }
 
-app.use(require('./modules/router.js')(config, refresh, licenses));
-server.listen(config.server.port, () => {
-    console.log(`Server started on port ${config.server.port}. License information can be found at http://localhost:${config.server.port}/licenses`);
+app.use(require('./modules/router.js')(config, refresh, licenses, log));
+
+app.use((err, _req, res, _next) => { 
+    log.error(err);
+    return res.render('error', {
+        code: 500,
+        message: 'An error occured'
+    });
 });
-require('./modules/socket.js')(io, vlc, refresh, config);
+
+server.listen(config.server.port, () => {
+    const networkInterfaces = os.networkInterfaces();
+    log.info(`Started!
+    vlc-bgm server is running on port ${config.server.port}
+    Connect locally: http://localhost:${config.server.port}
+    Connect on your network: http://[${networkInterfaces['Ethernet'][0].address}]:${config.server.port}
+    License information can be found at http://localhost:${config.server.port}/licenses`);
+});
+require('./modules/socket.js')(io, vlc, refresh, config, log);
 
 process.on('unhandledRejection', (e) => {
-    console.log(e);
+    log.error(e);
 });

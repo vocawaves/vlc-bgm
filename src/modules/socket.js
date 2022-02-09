@@ -1,10 +1,13 @@
-module.exports = (io, vlc, refresh, config) => {
+module.exports = (io, vlc, refresh, config, log) => {
     io.on('connection', (socket) => {
+        log.info('Socket connected');
+
         const refreshInterval = setInterval(async () => {
             io.emit('refreshstats', await refresh());
         }, 500);
     
-        socket.on('disconnect', () => { 
+        socket.on('disconnect', () => {
+            log.info('Socket disconnected');
             clearInterval(refreshInterval);
         });
     

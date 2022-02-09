@@ -10,6 +10,10 @@
 <body>
     <div class='columns'>
         <div class='column is-three-fifths is-offset-one-fifth has-text-centered'>
+            <div class='notification is-danger' id='error'>
+                Failed to connect to the server.<br /> Please check vlc-bgm and your internet connection are working
+                correctly. Then, refresh this page.
+            </div>
             <h1 class='title'>vlc-bgm interface</h1>
             <h2 class='subtitle'>Current status: <%= status %> @ volume <%= volume %>%</h2>
             <a class='button is-success' href='/logout'>
@@ -77,8 +81,7 @@
                             <span id='speedcurrent'>0 (50)</span>
                         </section>
                         <footer class='modal-card-foot'>
-                            <button class='button is-success' id='submitbtn'
-                                onclick='submitmodal()'>Submit</button>
+                            <button class='button is-success' id='submitbtn' onclick='submitmodal()'>Submit</button>
                             <span id='updating'></span>
                         </footer>
                     </div>
