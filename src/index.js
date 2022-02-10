@@ -5,7 +5,7 @@ const log = new Logger({
     ]
 });
 
-log.info('Starting vlc-bgm server...');
+log.info('[SERVER] Starting vlc-bgm...');
 
 const express = require('express');
 const app = express();
@@ -32,7 +32,7 @@ try {
     try {
         config = ini.parse(fs.readFileSync('../config.ini', 'utf8'));
     } catch (e) {
-        log.error('No config file found. Please create a "config.ini" file from "config.example.ini". If this is not available, please look on the GitHub.');
+        log.error('[SERVER] No config file found. Please create a "config.ini" file from "config.example.ini". If this is not available, please look on the GitHub.');
         process.exit(1);
     }
 }
@@ -53,11 +53,15 @@ const vlc = new VLC({
     password: config.vlc.password
 });
 
-app.use(session({
+const sessionMiddleware = session({
     secret: config.express.session_secret,
     name: config.express.session_name,
     maxAge: Number(config.express.session_cookie_time)
-}));
+});
+app.use(sessionMiddleware);
+io.use((socket, next) => {
+    sessionMiddleware(socket.request, {}, next);
+});
 
 app.use(express.urlencoded({
     extended: false
@@ -89,7 +93,7 @@ app.use((err, _req, res, _next) => {
 
 server.listen(config.server.port, () => {
     const networkInterfaces = os.networkInterfaces();
-    log.info(`Started!
+    log.info(`[SERVER] Started!
     vlc-bgm server is running on port ${config.server.port}
     Connect locally: http://localhost:${config.server.port}
     Connect on your network: http://[${networkInterfaces['Ethernet'][0].address}]:${config.server.port}
@@ -97,6 +101,18 @@ server.listen(config.server.port, () => {
 });
 require('./modules/socket.js')(io, vlc, refresh, config, log);
 
+server.on('error', (err) => { 
+    if (err.code === 'EADDRINUSE') { 
+        log.error('[SERVER] Port is already in use. Please close the program using it or change the port in the config file.');
+        process.exit(1);
+    }
+
+    log.error(err);
+});
+
 process.on('unhandledRejection', (e) => {
+    if (e.code === 'ECONNREFUSED') {
+        return log.error('[SERVER] Could not connect to vlc. Please check your config file and that vlc is running.');
+    }
     log.error(e);
 });

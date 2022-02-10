@@ -1,8 +1,8 @@
 const router = require('express').Router();
 
 module.exports = (config, refresh, licenses, log) => {
-    router.get('/login', (_req, res) => { 
-        log.info('Login page requested');
+    router.get('/login', (req, res) => { 
+        log.info(`[HTTP] /login requested (${req.ip})`);
         if (config.server.login_password === 'NULL') {
             return res.redirect('/');
         }
@@ -13,14 +13,18 @@ module.exports = (config, refresh, licenses, log) => {
     });
     
     router.post('/login', (req, res) => {
+        log.info(`[HTTP] /login post requested (${req.ip})`);
+
         if (config.server.login_password === 'NULL') {
             return res.redirect('/');
         }
     
         if (req.body.password === config.server.login_password) {
+            log.info(`[HTTP] User logged in (${req.ip})`);
             req.session.loggedIn = true;
             res.redirect('/');
         } else {
+            log.warn(`Incorrect password (${req.ip})`);
             res.render('login', {
                 error: 'Incorrect password.'
             });
@@ -28,21 +32,22 @@ module.exports = (config, refresh, licenses, log) => {
     });
     
     router.get('/logout', (req, res) => {
-        log.info('Logout page requested');
+        log.info(`[HTTP] /logout requested (${req.ip})`);
         req.session = null;
         res.redirect('/login');
     });
     
     router.get('/', async (req, res) => {
-        log.info('Home page requested');
+        log.info(`[HTTP] / requested (${req.ip})`);
         if (!req.session.loggedIn && config.server.login_password !== 'NULL') {
-            log.warn('User not logged in');
+            log.warn(`[HTTP] / user not logged in (${req.ip})`);
             return res.redirect('/login');
         }
     
         try {
           res.render('index', await refresh());
         } catch (e) { 
+          log.error(`[HTTP] Failed to connect to VLC (${req.ip})`);
           res.render('error', {
             code: 500,
             message: 'Failed to connect to VLC'
@@ -50,17 +55,17 @@ module.exports = (config, refresh, licenses, log) => {
         }
     });
     
-    router.get('/licenses', (_req, res) => {
-        log.info('License page requested');
+    router.get('/licenses', (req, res) => {
+        log.info(`[HTTP] /licenses requested (${req.ip})`);
         res.render('licenses', {
             licenses
         });
     });
     
     router.get('*', (req, res) => {
-        log.info('404 page requested');
+        log.info(`[HTTP] /404 page requested (${req.ip})`);
         if (!req.session.loggedIn && config.server.login_password !== 'NULL') {
-            log.warn('User not logged in');
+            log.warn(`[HTTP] /404 user not logged in (${req.ip})`);
             return res.redirect('/login');
         }
     

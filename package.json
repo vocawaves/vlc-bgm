@@ -27,11 +27,15 @@
     "devDependencies": {
         "pkg": "^5.5.2"
     },
+    "optionalDependencies": {
+        "bufferutil": "^4.0.6",
+        "utf-8-validate": "^5.0.8"
+    },
     "bin": "src/index.js",
     "scripts": {
         "start": "cd src && node index.js",
-        "build-win": "pkg --compress Brotli -t node16-win-x64 --o dist/vlc-bgm.exe .",
-        "build-linux": "pkg --compress Brotli -t node16-linux-x64 --o dist/vlc-bgm .",
-        "build-mac": "pkg --compress Brotli -t node16-macos-x64 --o dist/vlc-bgm ."
+        "build-win": "pkg --compress Brotli -t node17-win-x64 --o dist/vlc-bgm.exe .",
+        "build-linux": "pkg --compress Brotli -t node17-linux-x64 --o dist/vlc-bgm .",
+        "build-mac": "pkg --compress Brotli -t node17-macos-x64 --o dist/vlc-bgm ."
     }
 }

@@ -1,39 +1,70 @@
 module.exports = (io, vlc, refresh, config, log) => {
+    const checkDisconnect = (socket) => {
+        if (!socket.request.session.loggedIn && config.server.login_password !== 'NULL') {
+            log.warn(`[SOCKET.IO] User not logged in, disconnecting... (${socket.request.ip})`);
+            socket.disconnect();
+            return true;
+        }
+    }
+
     io.on('connection', (socket) => {
-        log.info('Socket connected');
+        log.info(`[SOCKET.IO] Socket connected (${socket.request.connection.remoteAddress})`);
 
         const refreshInterval = setInterval(async () => {
+            checkDisconnect(socket);
             io.emit('refreshstats', await refresh());
         }, 500);
     
         socket.on('disconnect', () => {
-            log.info('Socket disconnected');
+            log.info(`[SOCKET.IO] Socket disconnected (${socket.request.connection.remoteAddress})`);
             clearInterval(refreshInterval);
         });
+
+        checkDisconnect(socket);
     
         // controls
         socket.on('pause', async () => { 
+            log.info(`[SOCKET.IO] VLC pause requested (${socket.request.connection.remoteAddress})`);
+            if (checkDisconnect(socket) === true) {
+                return;
+            }
             vlc.pause();
             io.emit('refresh', await refresh());
         });
     
-        socket.on('play', async () => { 
+        socket.on('play', async () => {
+            log.info(`[SOCKET.IO] VLC play requested (${socket.request.connection.remoteAddress})`);
+            if (checkDisconnect(socket) === true) {
+                return;
+            }
             vlc.pause();
             io.emit('refresh', await refresh());
         });
     
-        socket.on('stop', async () => { 
+        socket.on('stop', async () => {
+            log.info(`[SOCKET.IO] VLC stop requested (${socket.request.connection.remoteAddress})`);
+            if (checkDisconnect(socket) === true) {
+                return;
+            }
             vlc.stop();
             io.emit('refresh', await refresh());
         });
     
-        socket.on('skip', async () => { 
+        socket.on('skip', async () => {
+            log.info(`[SOCKET.IO] VLC skip requested (${socket.request.connection.remoteAddress})`);
+            if (checkDisconnect(socket) === true) {
+                return;
+            }
             vlc.playlistNext();
             io.emit('refresh', await refresh());
         });
     
         // shortcuts
         socket.on('fadeout', async () => {
+            log.info(`[SOCKET.IO] VLC fade out requested (${socket.request.connection.remoteAddress})`);
+            if (checkDisconnect(socket) === true) {
+                return;
+            }
             const data = await vlc.updateAll();
             while (data[0].volume > 0) {
                 const newVolume = data[0].volume - 2;
@@ -46,6 +77,10 @@ module.exports = (io, vlc, refresh, config, log) => {
         });
     
         socket.on('fadein', async () => {
+            log.info(`[SOCKET.IO] VLC fade in requested (${socket.request.connection.remoteAddress})`);
+            if (checkDisconnect(socket) === true) {
+                return;
+            }
             vlc.pause();
             const data = await vlc.updateAll();
             while (data[0].volume < Number(config.server.fadein_max)) {
@@ -58,6 +93,10 @@ module.exports = (io, vlc, refresh, config, log) => {
         });
     
         socket.on('changevolume', async (type, amount, speed) => {
+            log.info(`[SOCKET.IO] VLC change volume requested (${socket.request.connection.remoteAddress})`);
+            if (checkDisconnect(socket) === true) {
+                return;
+            }
             const data = await vlc.updateAll();
             for (let i = 0; i < amount; i++) {
                 let newVolume;
@@ -74,6 +113,10 @@ module.exports = (io, vlc, refresh, config, log) => {
         });
 
         socket.on('changevolumeexact', async (val) => {
+            log.info(`[SOCKET.IO] VLC change volume exact requested (${socket.request.connection.remoteAddress})`);
+            if (checkDisconnect(socket) === true) {
+                return;
+            }
             vlc.setVolume(val * 0.256);
             io.emit('refresh', await refresh());
         });
