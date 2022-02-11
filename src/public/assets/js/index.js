@@ -1,4 +1,4 @@
-const socket = io.connect('http://localhost');
+const socket = io.connect(window.location.href);
 
 const updating = document.getElementById('updating');
 const submitbtn = document.getElementById('submitbtn');
@@ -46,15 +46,15 @@ const submitmodal = () => {
     submitbtn.disabled = true;
 };
 
-
 document.getElementById('volumeslider').onchange = (e) => { 
     socket.emit('changevolumeexact', e.target.value);
 }
 
+// errors
 socket.on('connect', () => {
     document.getElementById('error').style.display = 'none';
 });
 
-socket.on('connect_error', (err) => {
+socket.on('connect_error', () => {
     document.getElementById('error').style.display = 'block';
 });

@@ -38,12 +38,10 @@ try {
 }
 
 if (config.express.ratelimit_enabled) {
-    const limiter = ratelimit({
+    app.use(ratelimit({
         windowMs: config.express.ratelimit_window,
         max: config.express.ratelimit_max
-    });
-
-    app.use(limiter);
+    }));
 }
 
 const vlc = new VLC({
@@ -114,5 +112,6 @@ process.on('unhandledRejection', (e) => {
     if (e.code === 'ECONNREFUSED') {
         return log.error('[SERVER] Could not connect to vlc. Please check your config file and that vlc is running.');
     }
+
     log.error(e);
 });
