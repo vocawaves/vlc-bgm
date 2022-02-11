@@ -19,7 +19,7 @@
         </div>
     </section>
     <div class='licenses-content'>
-        <%- licenses %>
+        <%- it.licenses %>
     </div>
 </body>
 

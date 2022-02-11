@@ -18,6 +18,8 @@ const io = require('socket.io')(server);
 const ini = require('ini');
 const fs = require('fs');
 const os = require('os');
+const path = require('path');
+const eta = require('eta');
 
 if (!fs.existsSync('./LICENSES')) {
     helpers.getLicenses();
@@ -26,16 +28,21 @@ if (!fs.existsSync('./LICENSES')) {
 const licenses = fs.readFileSync('./LICENSES', 'utf8');
 
 let config;
-try {
-    config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'));
-} catch (e) {
+const configCheck = async () => {
     try {
-        config = ini.parse(fs.readFileSync('../config.ini', 'utf8'));
+        config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'));
     } catch (e) {
-        log.error('[SERVER] No config file found. Please create a "config.ini" file from "config.example.ini". If this is not available, please look on the GitHub.');
-        process.exit(1);
+        try {
+            config = ini.parse(fs.readFileSync('../config.ini', 'utf8'));
+        } catch (e) {
+            log.error('[SERVER] No config file found. Please create a "config.ini" file from "config.example.ini". If this is not available, please look on the GitHub. Press any key to exit.');
+            await helpers.keypress();
+            process.exit(1);
+        }
     }
 }
+
+configCheck();
 
 if (config.express.ratelimit_enabled) {
     app.use(ratelimit({
@@ -66,10 +73,17 @@ app.use(express.urlencoded({
 }));
 
 app.disable('x-powered-by');
-app.set('view engine', 'ejs');
-app.use(express.static('public'));
+
+eta.configure({
+    cache: process.env.NODE_ENV === 'production'
+});
+app.engine('eta', eta.renderFile);
+app.set('view engine', 'eta');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets/css/bulma.min.css', express.static('../node_modules/bulma/css/bulma.min.css'));
-app.use('/assets/js/socket.io.min.js', express.static('../node_modules/socket.io-client/dist/socket.io.min.js'));
+app.use('/assets/js/socket.io.min.js', express.static('../node_modules/socket.io/client-dist/socket.io.min.js'));
 
 const refresh = async () => {
     const data = await vlc.updateAll();
@@ -99,9 +113,10 @@ server.listen(config.server.port, () => {
 });
 require('./modules/socket.js')(io, vlc, refresh, config, log);
 
-server.on('error', (err) => { 
+server.on('error', async (err) => { 
     if (err.code === 'EADDRINUSE') { 
-        log.error('[SERVER] Port is already in use. Please close the program using it or change the port in the config file.');
+        log.error('[SERVER] Port is already in use. Please close the program using it or change the port in the config file. Press any key to exit.');
+        await helpers.keypress();
         process.exit(1);
     }
 

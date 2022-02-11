@@ -16,7 +16,7 @@
                     <div class='control'>
                         <input type='password' class='input' name='password' required>
                     </div>
-                    <span class='login-error'><%= error %></span>
+                    <span class='login-error'><%= it.error %></span>
                 </div>
                 <div class='field'>
                     <button class='button is-success'>

@@ -15,14 +15,13 @@
     "dependencies": {
         "bulma": "^0.9.3",
         "cookie-session": "^2.0.0",
-        "ejs": "^3.1.6",
+        "eta": "^1.12.3",
         "express": "^4.17.2",
         "express-rate-limit": "^6.2.0",
         "ini": "^2.0.0",
         "leekslazylogger": "^4.1.4",
         "node-vlc-http": "^1.2.0",
-        "socket.io": "^4.4.1",
-        "socket.io-client": "^4.4.1"
+        "socket.io": "^4.4.1"
     },
     "devDependencies": {
         "pkg": "^5.5.2"
@@ -32,6 +31,12 @@
         "utf-8-validate": "^5.0.8"
     },
     "bin": "src/index.js",
+    "pkg": {
+        "assets": [
+            "src/views/**/*",
+            "src/public/**/*"
+        ]
+    },
     "scripts": {
         "start": "cd src && node index.js",
         "build-win": "pkg --compress Brotli -t node17-win-x64 --o dist/vlc-bgm.exe .",
