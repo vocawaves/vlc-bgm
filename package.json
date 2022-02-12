@@ -39,6 +39,7 @@
     },
     "scripts": {
         "start": "cd src && node index.js",
+        "build": "npm run build-win && npm run build-linux && npm run build-mac",
         "build-win": "pkg --compress Brotli -t node17-win-x64 --o dist/vlc-bgm.exe .",
         "build-linux": "pkg --compress Brotli -t node17-linux-x64 --o dist/vlc-bgm .",
         "build-mac": "pkg --compress Brotli -t node17-macos-x64 --o dist/vlc-bgm ."

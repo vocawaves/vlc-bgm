@@ -21,11 +21,12 @@ const os = require('os');
 const path = require('path');
 const eta = require('eta');
 
-if (!fs.existsSync('./LICENSES')) {
+if (!fs.existsSync(path.join(__dirname, 'LICENSES'))) {
+    log.info('[SERVER] LICENSES file doesn\'t exist, creating...');
     helpers.getLicenses();
 }
 
-const licenses = fs.readFileSync('./LICENSES', 'utf8');
+const licenses = fs.readFileSync(path.join(__dirname, 'LICENSES'), 'utf8');
 
 let config;
 const configCheck = async () => {

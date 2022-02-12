@@ -24,17 +24,64 @@ function urlParser(input) {
     return input.replace(urlPattern, '<a href="$&" target="_blank">$&</a>');
 }
 
+function pushLicense(dir, file) {
+    const package = JSON.parse(fs.readFileSync(dir + '/package.json'));
+    const author = (package.author ? (typeof package.author === 'object' ? package.author.name : package.author) : package.contributors ? (Array.isArray(package.contributors) ? (package.contributors.map((contributor) => contributor.name || contributor)).join(', ') : package.contributors) : package.name.split('/')[0]);
+    const licenseText = 'vlc-bgm contains software by ' + (author) + '. This software is "' + package.name + '". The source code for this software can be found at ' + urlParser(package.homepage || 'https://npmjs.com/package/' + package.name) + '. A copy of the license and notice included in the software is displayed below:';
+    return licenseText + '<br/><br/>' + fs.readFileSync(`${dir}/${file}`, 'utf8').replace(/(?:\r\n|\r|\n)/g, '<br>').replace(/\n\s*\n/g, "<br/><br/>") + '\n\n' + '<hr/>';
+}
+
+function checkDirectory(dir) {
+    if (fs.existsSync(dir + '/LICENSE')) {
+        return pushLicense(dir, 'LICENSE');
+    } else if (fs.existsSync(dir + '/LICENSE.md')) {
+        return pushLicense(dir, 'LICENSE.md');
+    } else if (fs.existsSync(dir + '/LICENSE.txt')) {
+        return pushLicense(dir, 'LICENSE.txt');
+    } else if (fs.existsSync(dir + '/license')) {
+        return pushLicense(dir, 'license');
+    } else if (fs.existsSync(dir + '/license.md')) {
+        return pushLicense(dir, 'license.md');
+    } else if (fs.existsSync(dir + 'LICENSE.MIT')) {
+        return pushLicense(dir, 'LICENSE.MIT');
+    } else {
+        return null;
+    }
+}
+
 module.exports.getLicenses = () => {
     const modules = fs.readdirSync('../node_modules');
     const licenses = [];
 
-    modules.forEach(module => {
-        if (fs.fstatSync(fs.openSync('../node_modules/' + module)).isDirectory()) {
-            if (fs.existsSync('../node_modules/' + module + '/LICENSE')) {
-                const package = JSON.parse(fs.readFileSync('../node_modules/' + module + '/package.json'));
-                const author = (package.author ? (typeof package.author === 'object' ? package.author.name : package.author) : package.contributors);
-                const licenseText = 'vlc-bgm contains software by ' + (author) + '. This software is "' + package.name + '". The source code for this software can be found at ' + urlParser(package.homepage || 'https://npmjs.com/package/' + package.name) + '. A copy of the license and notice included in the software is displayed below:';
-                licenses.push(licenseText + '<br/><br/>' + fs.readFileSync(`../node_modules/${module}/LICENSE`, 'utf8').replace(/(?:\r\n|\r|\n)/g, '<br>').replace(/\n\s*\n/g, "<br/><br/>") + '\n\n' + '<hr/>');
+    modules.forEach((module) => {
+        const moduleDir = '../node_modules/' + module;
+        if (fs.fstatSync(fs.openSync(moduleDir)).isDirectory()) {
+            if (!fs.existsSync(moduleDir + '/package.json')) {
+                const authormodules = fs.readdirSync(moduleDir);
+                authormodules.forEach((authormodule) => {
+                    const authormodulefiles = moduleDir + '/' + authormodule;
+                    if (fs.existsSync(moduleDir + '/' + authormodule + '/package.json')) {
+                        const licenseText = checkDirectory(authormodulefiles);
+                        if (licenseText) {
+                            licenses.push(licenseText);
+                        }
+                    }
+                });
+            }
+            if (fs.existsSync(moduleDir + '/node_modules')) { 
+                const submodules = fs.readdirSync(moduleDir + '/node_modules');
+                submodules.forEach((submodule) => {
+                    const submoduleDir = moduleDir + '/node_modules/' + submodule;
+                    const licenseText = checkDirectory(submoduleDir);
+                    if (licenseText) {
+                        licenses.push(licenseText);
+                    }
+                });
+            } else {
+                const licenseText = checkDirectory(moduleDir);
+                if (licenseText) {
+                    licenses.push(licenseText);
+                }
             }
         }
     });
