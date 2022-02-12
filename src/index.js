@@ -1,3 +1,5 @@
+process.title = 'vlc-bgm';
+
 const Logger = require('leekslazylogger');
 const log = new Logger({
     transports: [
@@ -29,27 +31,48 @@ if (!fs.existsSync(path.join(__dirname, 'LICENSES'))) {
 const licenses = fs.readFileSync(path.join(__dirname, 'LICENSES'), 'utf8');
 
 let config;
+let success = true;
 const configCheck = async () => {
     try {
         config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'));
     } catch (e) {
-        try {
-            config = ini.parse(fs.readFileSync('../config.ini', 'utf8'));
-        } catch (e) {
-            log.error('[SERVER] No config file found. Please create a "config.ini" file from "config.example.ini". If this is not available, please look on the GitHub. Press any key to exit.');
-            await helpers.keypress();
-            process.exit(1);
-        }
+        log.error('[SERVER] No config file found. Please create a "config.ini" file from "config.example.ini". If this is not available, please look on the GitHub (https://github.com/davidcralph/vlc-bgm). Press any key to exit.');
+        success = false;
+        await helpers.keypress();
+        process.exit(1);
     }
 }
 
 configCheck();
 
+if (!success) {
+    return;
+}
+
 if (config.express.ratelimit_enabled) {
-    app.use(ratelimit({
-        windowMs: config.express.ratelimit_window,
-        max: config.express.ratelimit_max
-    }));
+    if (!Number(config.express.ratelmit_window) || !Number(config.express.ratelimit_max)) { 
+        log.warn('[SERVER] Ratelimit settings are invalid, disabling ratelimiter. Please check your config.ini file.');
+    } else {
+        app.use(ratelimit({
+            windowMs: config.express.ratelimit_window,
+            max: config.express.ratelimit_max
+        }));
+    }
+}
+
+const vlcCheck = async () => {
+    if (!config.vlc.host || !config.vlc.port || !config.vlc.password || config.vlc.port <= 0 || config.vlc.port > 65536) { 
+        log.error('[SERVER] VLC settings are invalid, Please check your config.ini file. Press any key to exit.');
+        success = false;
+        await helpers.keypress();
+        process.exit(1);
+    }
+}
+
+vlcCheck();
+
+if (!success) {
+    return;
 }
 
 const vlc = new VLC({
@@ -58,6 +81,25 @@ const vlc = new VLC({
     username: '',
     password: config.vlc.password
 });
+
+process.on('unhandledRejection', (e) => {
+    if (e.code === 'ECONNREFUSED') {
+        return log.error('[SERVER] Could not connect to vlc. Please check your config file and that vlc is running.');
+    }
+
+    log.error(e);
+});
+
+const sessionCheck = async () => {
+    if (!config.express.session_secret || !config.express.session_name || !Number(config.express.session_cookie_time)) { 
+        log.error('[SERVER] Session settings are invalid, Please check your config.ini file. Press any key to exit.');
+        success = false;
+        await helpers.keypress();
+        process.exit(1);
+    } 
+}
+
+sessionCheck();
 
 const sessionMiddleware = session({
     secret: config.express.session_secret,
@@ -104,6 +146,21 @@ app.use((err, _req, res, _next) => {
     });
 });
 
+const portCheck = async () => {
+    if (config.server.port <= 0 || config.server.port > 65536) { 
+        log.error('[SERVER] Invalid port number, please check your config.ini file. Press any key to exit.');
+        success = false;
+        await helpers.keypress();
+        process.exit(1);
+    }
+}
+
+portCheck();
+
+if (!success) { 
+    return;
+}
+
 server.listen(config.server.port, () => {
     const networkInterfaces = os.networkInterfaces();
     log.info(`[SERVER] Started!
@@ -122,12 +179,4 @@ server.on('error', async (err) => {
     }
 
     log.error(err);
-});
-
-process.on('unhandledRejection', (e) => {
-    if (e.code === 'ECONNREFUSED') {
-        return log.error('[SERVER] Could not connect to vlc. Please check your config file and that vlc is running.');
-    }
-
-    log.error(e);
 });
