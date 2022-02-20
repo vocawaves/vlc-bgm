@@ -1,3 +1,5 @@
+const helpers = require('./helpers');
+
 module.exports = (io, vlc, refresh, config, log) => {
     const checkDisconnect = (socket) => {
         if (!socket.request.session.loggedIn && config.server.login_password !== 'NULL') {
@@ -101,9 +103,15 @@ module.exports = (io, vlc, refresh, config, log) => {
             for (let i = 0; i < amount; i++) {
                 let newVolume;
                 if (type === 'decrease') {
-                    newVolume = data[0].volume - 2;
+                    if (Math.round(data[0].volume / 2.56) === 0) { 
+                        break;
+                    }
+                    newVolume = data[0].volume - 2.56;
                 } else if (type === 'increase') {
-                    newVolume = data[0].volume + 2;
+                    if (Math.round(data[0].volume / 2.56) === 100) { 
+                        break;
+                    }
+                    newVolume = data[0].volume + 2.56;
                 }
                 vlc.setVolume(newVolume);
                 data[0].volume = newVolume;

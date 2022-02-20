@@ -1,3 +1,7 @@
+body {
+    touch-action: pan-y;
+}
+
 .shortcut {
     background-color: #478ae2;
     border-radius: 12px;
@@ -16,6 +20,7 @@
 
 .controls {
     margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
 }
 
 .modal-card {
@@ -32,7 +37,11 @@
         color: #ffffff;
     }
 
-    .title, .subtitle, .label, .modal-card-title, .modal-card-body {
+    .title,
+    .subtitle,
+    .label,
+    .modal-card-title,
+    .modal-card-body {
         color: #ffffff;
     }
 
@@ -46,7 +55,8 @@
         color: #ffffff !important;
     }
 
-    .modal-card-head, .modal-card-foot {
+    .modal-card-head,
+    .modal-card-foot {
         background-color: #363636;
     }
 
@@ -96,4 +106,19 @@
 #error {
     margin-top: 10px;
     display: none;
+}
+
+@media only screen and (max-width: 600px) {
+    .shortcut {
+        width: 25%;
+        margin: auto;
+        margin-bottom: 10px;
+        padding: 20px;
+    }
+
+    .modal-card {
+        width: 75%;
+        margin: auto;
+        margin-top: 50px;
+    }
 }

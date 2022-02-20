@@ -4,6 +4,7 @@ const updating = document.getElementById('updating');
 const submitbtn = document.getElementById('submitbtn');
 const modal = document.getElementsByClassName('modal')[0];
 const statusElement = document.getElementsByClassName('subtitle')[0];
+const volumeslider = document.getElementById('volumeslider');
 
 const showmodal = (type) => {
     document.getElementById('volume-title').innerText = type + ' Volume';
@@ -46,7 +47,7 @@ const submitmodal = () => {
     submitbtn.disabled = true;
 };
 
-document.getElementById('volumeslider').onchange = (e) => { 
+volumeslider.onchange = (e) => { 
     socket.emit('changevolumeexact', e.target.value);
 }
 
