@@ -40,7 +40,7 @@
                 <p class='subtitle'>Volume control</p>
                 <div class='volumecontrol'>
                     <span>0%</span>
-                    <input type='range' min='0' max='100' step='5' name='volume' id='volumeslider' value='<%= it.volume %>'
+                    <input type='range' min='0' max='100' step='5' name='volume' id='volumeslider' value='<%= it.volume %>'>
                     <span>100%</span>
                 </div>
             </div>
@@ -75,7 +75,7 @@
                             <span>1</span>
                             <input type='range' min='0' max='100' value='50' step='10' name='amount' id='amount'>
                             <span id='amountcurrent'>0 (50)</span>
-                            <br />
+                            <br /><br />
                             <label for='speed'>Speed (ms)</label>
                             <br />
                             <span>0</span>

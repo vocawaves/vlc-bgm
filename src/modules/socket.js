@@ -125,8 +125,8 @@ module.exports = (io, vlc, refresh, config, log) => {
             if (checkDisconnect(socket) === true) {
                 return;
             }
-            vlc.setVolume(val * 0.256);
+            vlc.setVolume(val * 2.56);
             io.emit('refresh', await refresh());
         });
     });
-}
+};

@@ -6,6 +6,8 @@ This is designed to be used when VLC is running on a separate device that isn't 
 a laptop behind the scenes in an event. The web interface allows you to control the interval music from your phone or a computer. The advantages of this project over the built-in interface are that it comes with shortcuts to automate tasks such as gradually increasing volume and fade-in/fade-out.
 
 ## Installation
+### Quick start
+Download a release from [here](https://github.com/davidcralph/vlc-bgm/releases), extract the folder, modify the config then run the binary.
 ### Requirements
 * [VLC](https://www.videolan.org/vlc/)
 * [Node.js](https://nodejs.org/en/)
