@@ -18,6 +18,7 @@
             </div>
             <h1 class='title'>vlc-bgm interface</h1>
             <h2 class='subtitle'>Current status: <%= it.status %> @ volume <%= it.volume %>%</h2>
+            <h2 class='subtitle song'>Current song: <%= it.song %></h2>
             <a class='button is-success' href='/logout'>
                 Logout
             </a>

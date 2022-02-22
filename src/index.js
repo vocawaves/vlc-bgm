@@ -132,7 +132,8 @@ const refresh = async () => {
     const data = await vlc.updateAll();
     return {
         status: helpers.capitaliseStart(data[0].state),
-        volume: Math.round(data[0].volume / 2.56)
+        volume: Math.round(data[0].volume / 2.56),
+        song: data[0].information ? data[0].information.category.meta.filename : 'None'
     };
 }
 

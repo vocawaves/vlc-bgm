@@ -159,3 +159,7 @@ input[type=range]::-moz-range-thumb:hover {
 input, span {
     vertical-align: middle;
 }
+
+.song {
+    margin-top: -20px;
+}
