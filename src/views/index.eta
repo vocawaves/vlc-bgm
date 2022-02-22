@@ -41,7 +41,8 @@
                 <p class='subtitle'>Volume control</p>
                 <div class='volumecontrol'>
                     <span>0%</span>
-                    <input type='range' min='0' max='100' step='5' name='volume' id='volumeslider' value='<%= it.volume %>'>
+                    <input type='range' min='0' max='100' step='5' name='volume' id='volumeslider'
+                        value='<%= it.volume %>'>
                     <span>100%</span>
                 </div>
             </div>

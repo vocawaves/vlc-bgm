@@ -19,7 +19,7 @@
                 <%= it.message %>
             </p>
             <button class='button' onclick='window.location.reload()'>Try again</button>
-            <br/><br/>
+            <br /><br />
             <a class='button' href='/logout'>Logout (if logged in)</a>
         </div>
     </section>

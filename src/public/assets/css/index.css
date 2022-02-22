@@ -67,6 +67,14 @@ body {
     .licenses-content {
         color: #ffffff;
     }
+
+    .volumecontrol {
+        color: #ffffff;
+    }
+
+    input[type=range] {
+        background: #363636;
+    }
 }
 
 .licenses-content {
@@ -93,10 +101,6 @@ body {
 
 .login-error {
     color: red;
-}
-
-.volumecontrol {
-    color: #ffffff;
 }
 
 #volumeslider {
@@ -126,7 +130,7 @@ body {
 input[type=range] {
     -webkit-appearance: none;
     appearance: none;
-    background: #363636;
+    background: #c4c4c4;
     border-radius: 12px;
 }
 
