@@ -128,5 +128,42 @@ module.exports = (io, vlc, refresh, config, log) => {
             vlc.setVolume(val * 2.56);
             io.emit('refresh', await refresh());
         });
+
+        // playback
+        socket.on('clearplaylist', async () => {
+            log.info(`[SOCKET.IO] VLC clear playlist requested (${socket.request.connection.remoteAddress})`);
+            if (checkDisconnect(socket) === true) {
+                return;
+            }
+            vlc.clearPlaylist();
+            io.emit('refresh', await refresh());
+        });
+
+        socket.on('togglerandom', async () => {
+            log.info(`[SOCKET.IO] VLC toggle random requested (${socket.request.connection.remoteAddress})`);
+            if (checkDisconnect(socket) === true) {
+                return;
+            }
+            vlc.toggleRandom();
+            io.emit('refresh', await refresh());
+        });
+
+        socket.on('toggleloop', async () => {
+            log.info(`[SOCKET.IO] VLC toggle loop requested (${socket.request.connection.remoteAddress})`);
+            if (checkDisconnect(socket) === true) {
+                return;
+            }
+            vlc.toggleLoop();
+            io.emit('refresh', await refresh());
+        });
+
+        socket.on('togglerepeat', async () => {
+            log.info(`[SOCKET.IO] VLC toggle repeat requested (${socket.request.connection.remoteAddress})`);
+            if (checkDisconnect(socket) === true) {
+                return;
+            }
+            vlc.toggleRepeat();
+            io.emit('refresh', await refresh());
+        });
     });
 };

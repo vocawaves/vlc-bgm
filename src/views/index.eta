@@ -19,6 +19,7 @@
             <h1 class='title'>vlc-bgm interface</h1>
             <h2 class='subtitle'>Current status: <%= it.status %> @ volume <%= it.volume %>%</h2>
             <h2 class='subtitle song'>Current song: <%= it.song %></h2>
+            <h2 class='subtitle song'>Current playback options: <%= it.playback %></h2>
             <a class='button is-success' href='/logout'>
                 Logout
             </a>
@@ -38,7 +39,7 @@
                         Skip
                     </div>
                 </div>
-                <p class='subtitle'>Volume control</p>
+                <p class='subtitle'>Volume</p>
                 <div class='volumecontrol'>
                     <span>0%</span>
                     <input type='range' min='0' max='100' step='5' name='volume' id='volumeslider'
@@ -60,6 +61,23 @@
                     </div>
                     <div class='column shortcut' onclick='socket.emit("fadein")'>
                         Fade in
+                    </div>
+                </div>
+            </div>
+            <div class='playback'>
+                <h3 class='subtitle'>Playback</h3>
+                <div class='columns'>
+                    <div class='column shortcut' onclick='socket.emit("clearplaylist")'>
+                        Clear playlist
+                    </div>
+                    <div class='column shortcut' onclick='socket.emit("togglerandom")'>
+                        Toggle random
+                    </div>
+                    <div class='column shortcut' onclick='socket.emit("toggleloop")'>
+                        Toggle loop
+                    </div>
+                    <div class='column shortcut' onclick='socket.emit("togglerepeat")'>
+                        Toggle repeat
                     </div>
                 </div>
             </div>

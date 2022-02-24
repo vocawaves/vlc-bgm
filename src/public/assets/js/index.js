@@ -5,6 +5,7 @@ const submitbtn = document.getElementById('submitbtn');
 const modal = document.getElementsByClassName('modal')[0];
 const statusElement = document.getElementsByClassName('subtitle')[0];
 const songElement = document.getElementsByClassName('subtitle')[1];
+const playbackElement = document.getElementsByClassName('subtitle')[2];
 const volumeslider = document.getElementById('volumeslider');
 
 function showmodal(type) {
@@ -22,12 +23,14 @@ function hidemodal() {
 socket.on('refresh', function(data) {
     statusElement.innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
     songElement.innerText = `Current song: ${data.song}`;
+    playbackElement.innerText = `Current playback options: ${data.playback}`;
     hidemodal();
 });
 
 socket.on('refreshstats', function(data) {
     statusElement.innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
     songElement.innerText = `Current song: ${data.song}`;
+    playbackElement.innerText = `Current playback options: ${data.playback}`;
 });
 
 document.getElementsByClassName('modal-background')[0].onclick = function() { 

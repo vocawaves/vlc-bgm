@@ -79,7 +79,8 @@ const vlc = new VLC({
     host: config.vlc.host,
     port: config.vlc.port,
     username: '',
-    password: config.vlc.password
+    password: config.vlc.password,
+    autoUpdate: false
 });
 
 process.on('unhandledRejection', (e) => {
@@ -133,7 +134,8 @@ const refresh = async () => {
     return {
         status: helpers.capitaliseStart(data[0].state),
         volume: Math.round(data[0].volume / 2.56),
-        song: data[0].information ? data[0].information.category.meta.filename : 'None'
+        song: data[0].information ? data[0].information.category.meta.filename : 'None',
+        playback: `random = ${data[0].random}, loop = ${data[0].loop}, repeat = ${data[0].repeat}`,
     };
 }
 
