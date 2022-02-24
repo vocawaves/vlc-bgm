@@ -30,7 +30,7 @@ module.exports = (io, vlc, refresh, config, log) => {
             if (checkDisconnect(socket) === true) {
                 return;
             }
-            vlc.pause();
+            vlc.forcePause();
             io.emit('refresh', await refresh());
         });
     
@@ -39,7 +39,10 @@ module.exports = (io, vlc, refresh, config, log) => {
             if (checkDisconnect(socket) === true) {
                 return;
             }
-            vlc.pause();
+            const data = await vlc.updateAll();
+            if (data[0].state !== 'playing') {
+                vlc.pause();
+            }
             io.emit('refresh', await refresh());
         });
     
