@@ -30,7 +30,7 @@ module.exports = (io, vlc, refresh, config, log) => {
             if (checkDisconnect(socket) === true) {
                 return;
             }
-            vlc.forcePause();
+            await vlc.forcePause();
             io.emit('refresh', await refresh());
         });
     
@@ -60,7 +60,7 @@ module.exports = (io, vlc, refresh, config, log) => {
             if (checkDisconnect(socket) === true) {
                 return;
             }
-            vlc.playlistNext();
+            await vlc.playlistNext();
             io.emit('refresh', await refresh());
         });
     
@@ -73,7 +73,7 @@ module.exports = (io, vlc, refresh, config, log) => {
             const data = await vlc.updateAll();
             while (data[0].volume > 0) {
                 const newVolume = data[0].volume - 2;
-                vlc.setVolume(newVolume);
+                await vlc.setVolume(newVolume);
                 data[0].volume = newVolume;
                 await helpers.sleep(config.server.fadeout_wait);
             }
@@ -90,7 +90,7 @@ module.exports = (io, vlc, refresh, config, log) => {
             const data = await vlc.updateAll();
             while (data[0].volume < Number(config.server.fadein_max)) {
                 const newVolume = data[0].volume + 2;
-                vlc.setVolume(newVolume);
+                await vlc.setVolume(newVolume);
                 data[0].volume = newVolume;
                 await helpers.sleep(config.server.fadein_wait);
             }
@@ -116,7 +116,7 @@ module.exports = (io, vlc, refresh, config, log) => {
                     }
                     newVolume = data[0].volume + 2.56;
                 }
-                vlc.setVolume(newVolume);
+                await vlc.setVolume(newVolume);
                 data[0].volume = newVolume;
                 await helpers.sleep(speed);
             }
@@ -128,7 +128,7 @@ module.exports = (io, vlc, refresh, config, log) => {
             if (checkDisconnect(socket) === true) {
                 return;
             }
-            vlc.setVolume(val * 2.56);
+            await vlc.setVolume(val * 2.56);
             io.emit('refresh', await refresh());
         });
 
@@ -147,7 +147,7 @@ module.exports = (io, vlc, refresh, config, log) => {
             if (checkDisconnect(socket) === true) {
                 return;
             }
-            vlc.toggleRandom();
+            await vlc.toggleRandom();
             io.emit('refresh', await refresh());
         });
 
@@ -156,7 +156,7 @@ module.exports = (io, vlc, refresh, config, log) => {
             if (checkDisconnect(socket) === true) {
                 return;
             }
-            vlc.toggleLoop();
+            await vlc.toggleLoop();
             io.emit('refresh', await refresh());
         });
 
@@ -165,7 +165,7 @@ module.exports = (io, vlc, refresh, config, log) => {
             if (checkDisconnect(socket) === true) {
                 return;
             }
-            vlc.toggleRepeat();
+            await vlc.toggleRepeat();
             io.emit('refresh', await refresh());
         });
     });

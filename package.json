@@ -6,11 +6,11 @@
     "license": "MIT",
     "main": "src/index.js",
     "bugs": {
-        "url": "https://github.com/davidcralph/vlc-bgm/issues"
+        "url": "https://github.com/vocauk/vlc-bgm/issues"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/davidcralph/vlc-bgm"
+        "url": "https://github.com/vocauk/vlc-bgm"
     },
     "dependencies": {
         "bulma": "^0.9.3",
@@ -19,7 +19,7 @@
         "express": "^4.17.3",
         "express-rate-limit": "^6.3.0",
         "ini": "^2.0.0",
-        "leekslazylogger": "^4.1.4",
+        "leekslazylogger": "4.1.5",
         "node-vlc-http": "^1.2.0",
         "socket.io": "^4.4.1"
     },
@@ -28,7 +28,7 @@
     },
     "optionalDependencies": {
         "bufferutil": "^4.0.6",
-        "utf-8-validate": "^5.0.8"
+        "utf-8-validate": "^5.0.9"
     },
     "bin": "src/index.js",
     "pkg": {

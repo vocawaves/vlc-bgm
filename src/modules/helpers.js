@@ -25,9 +25,9 @@ function urlParser(input) {
 }
 
 function pushLicense(dir, file) {
-    const package = JSON.parse(fs.readFileSync(dir + '/package.json'));
-    const author = (package.author ? (typeof package.author === 'object' ? package.author.name : package.author) : package.contributors ? (Array.isArray(package.contributors) ? (package.contributors.map((contributor) => contributor.name || contributor)).join(', ') : package.contributors) : package.name.split('/')[0]);
-    const licenseText = 'vlc-bgm contains software by ' + (author) + '. This software is "' + package.name + '". The source code for this software can be found at ' + urlParser(package.homepage || 'https://npmjs.com/package/' + package.name) + '. A copy of the license and notice included in the software is displayed below:';
+    const pkg = JSON.parse(fs.readFileSync(dir + '/package.json'));
+    const author = (pkg.author ? (typeof pkg.author === 'object' ? pkg.author.name : pkg.author) : pkg.contributors ? (Array.isArray(pkg.contributors) ? (pkg.contributors.map((contributor) => contributor.name || contributor)).join(', ') : pkg.contributors) : pkg.name.split('/')[0]);
+    const licenseText = 'vlc-bgm contains software by ' + (author) + '. This software is "' + pkg.name + '". The source code for this software can be found at ' + urlParser(pkg.homepage || 'https://npmjs.com/package/' + pkg.name) + '. A copy of the license and notice included in the software is displayed below:';
     return licenseText + '<br/><br/>' + fs.readFileSync(`${dir}/${file}`, 'utf8').replace(/(?:\r\n|\r|\n)/g, '<br>').replace(/\n\s*\n/g, "<br/><br/>") + '\n\n' + '<hr/>';
 }
 

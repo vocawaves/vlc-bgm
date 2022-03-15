@@ -85,9 +85,8 @@ body {
 
 .hero {
     max-width: 50%;
-    margin: auto;
     width: 50%;
-    margin-bottom: 25px;
+    margin: auto auto 25px;
     border-radius: 15px;
 }
 
@@ -115,15 +114,13 @@ body {
 @media only screen and (max-width: 600px) {
     .shortcut {
         width: 25%;
-        margin: auto;
-        margin-bottom: 10px;
+        margin: auto auto 10px;
         padding: 20px;
     }
 
     .modal-card {
         width: 75%;
-        margin: auto;
-        margin-top: 50px;
+        margin: 50px auto auto;
     }
 }
 

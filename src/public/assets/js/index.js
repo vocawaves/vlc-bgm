@@ -12,13 +12,13 @@ function showmodal(type) {
     document.getElementById('volume-title').innerText = type + ' Volume';
     window.type = type.toLowerCase();
     modal.style.display = 'block';
-};
+}
 
 function hidemodal() {
     modal.style.display = 'none';
     updating.innerText = '';
     submitbtn.disabled = false;
-};
+}
 
 socket.on('refresh', function(data) {
     statusElement.innerText = `Current status: ${data.status} @ volume ${data.volume}%`;
@@ -35,7 +35,7 @@ socket.on('refreshstats', function(data) {
 
 document.getElementsByClassName('modal-background')[0].onclick = function() { 
     hidemodal();
-}
+};
 
 const amount = document.getElementById('amount');
 amount.oninput = function() { 
@@ -51,7 +51,7 @@ function submitmodal() {
     socket.emit('changevolume', window.type, amount.value, speed.value);
     updating.innerText = 'Updating...';
     submitbtn.disabled = true;
-};
+}
 
 volumeslider.onchange = function(e) { 
     socket.emit('changevolumeexact', e.target.value);

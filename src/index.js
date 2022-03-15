@@ -36,7 +36,7 @@ const configCheck = async () => {
     try {
         config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'));
     } catch (e) {
-        log.error('[SERVER] No config file found. Please create a "config.ini" file from "config.example.ini". If this is not available, please look on the GitHub (https://github.com/davidcralph/vlc-bgm). Press any key to exit.');
+        log.error('[SERVER] No config file found. Please create a "config.ini" file from "config.example.ini". If this is not available, please look on the GitHub (https://github.com/vocauk/vlc-bgm). Press any key to exit.');
         success = false;
         await helpers.keypress();
         process.exit(1);
