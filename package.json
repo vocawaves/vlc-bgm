@@ -13,22 +13,22 @@
         "url": "https://github.com/vocauk/vlc-bgm"
     },
     "dependencies": {
-        "bulma": "^0.9.3",
-        "cookie-session": "^2.0.0",
-        "eta": "^1.12.3",
-        "express": "^4.17.3",
-        "express-rate-limit": "^6.3.0",
-        "ini": "^2.0.0",
-        "leekslazylogger": "4.1.5",
-        "node-vlc-http": "^1.2.0",
-        "socket.io": "^4.4.1"
+        "bulma": "0.9.3",
+        "cookie-session": "2.0.0",
+        "eta": "1.12.3",
+        "express": "4.17.3",
+        "express-rate-limit": "6.3.0",
+        "ini": "2.0.0",
+        "leekslazylogger": "4.1.7",
+        "node-vlc-http": "1.2.0",
+        "socket.io": "4.4.1"
     },
     "devDependencies": {
-        "pkg": "^5.5.2"
+        "pkg": "5.5.2"
     },
     "optionalDependencies": {
-        "bufferutil": "^4.0.6",
-        "utf-8-validate": "^5.0.9"
+        "bufferutil": "4.0.6",
+        "utf-8-validate": "5.0.9"
     },
     "bin": "src/index.js",
     "pkg": {
