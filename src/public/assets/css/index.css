@@ -3,7 +3,7 @@ body {
 }
 
 .shortcut {
-    background-color: #478ae2;
+    background-color: #3498db;
     border-radius: 12px;
     color: #ffffff;
     font-weight: 600;
@@ -33,7 +33,7 @@ body {
 
 @media (prefers-color-scheme: dark) {
     html {
-        background-color: #000000;
+        background-color: #1a1a1a;
         color: #ffffff;
     }
 
@@ -46,22 +46,23 @@ body {
     }
 
     .box {
-        background-color: #4d4d4d;
+        background-color: #282828;
     }
 
     .input {
-        background-color: #363636;
+        background-color: #282828;
         border-color: #000000;
         color: #ffffff !important;
     }
 
     .modal-card-head,
     .modal-card-foot {
-        background-color: #363636;
+        background-color: #282828;
+        border: none;
     }
 
     .modal-card-body {
-        background-color: #4d4d4d;
+        background-color: #1a1a1a;
     }
 
     .licenses-content {
@@ -99,7 +100,15 @@ body {
 }
 
 .login-error {
-    color: red;
+    color: #e91e63;
+}
+
+.is-danger {
+    background-color: #e91e63 !important;
+}
+
+.is-success {
+    background-color: #1ebab0 !important;
 }
 
 #volumeslider {
@@ -127,7 +136,7 @@ body {
 input[type=range] {
     -webkit-appearance: none;
     appearance: none;
-    background: #c4c4c4;
+    background: #282828;
     border-radius: 12px;
 }
 
@@ -136,7 +145,7 @@ input[type=range]::-webkit-slider-thumb {
     appearance: none;
     width: 30px;
     height: 30px;
-    background: #478ae2;
+    background: #3498db;
     cursor: pointer;
     border-radius: 12px;
 }
@@ -144,7 +153,7 @@ input[type=range]::-webkit-slider-thumb {
 input[type=range]::-moz-range-thumb {
     width: 30px;
     height: 30px;
-    background: #478ae2;
+    background: #3498db;
     cursor: pointer;
     border-radius: 12px;
 }
@@ -167,4 +176,16 @@ input, span {
 
 .playback {
     margin-top: 20px;
+}
+
+a {
+    color: #3498db;
+}
+
+a:hover {
+    color: #3b73bb;
+}
+
+.licenses {
+    margin-top: 25px;
 }

@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <section class='hero is-primary'>
+    <section class='licenses hero is-primary'>
         <div class='hero-body'>
             <p class='title'>
                 Licenses
