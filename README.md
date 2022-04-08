@@ -20,7 +20,7 @@ Download a release from [here](https://github.com/vocauk/vlc-bgm/releases), extr
 5. Copy ``src/config.example.ini`` to ``src/config.ini`` and fill it out
 6. Make sure VLC is running and run ``npm start`` to start the interface
 ### Building
-Binaries can be created with ``npm run build-<os>``, etc ``npm run build-win`` or ``npm run build-linux``. These will appear in a ``dist`` directory. You can also run ``npm run build`` to build for all operating systems.
+Binaries can be created with ``npm run build-<os>``, for example ``npm run build-win`` or ``npm run build-linux``. These will appear in a ``dist`` directory. You can also run ``npm run build`` to build for all operating systems.
 
 ## License
 [MIT](LICENSE)
